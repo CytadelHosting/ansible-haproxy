@@ -1,10 +1,13 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
 # {{ ansible_managed }}
 
 global
 {% include 'global.cfg.j2' %}
 
+
 defaults
 {% include 'defaults.cfg.j2' %}
+
 
 {% include 'userlist.cfg.j2' %}
 
