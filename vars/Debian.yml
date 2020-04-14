@@ -1,0 +1,12 @@
+---
+# vars file for Debian
+
+haproxy_repo: "deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }}-backports main"
+haproxy_default_release: "{{ ansible_distribution_release }}-backports"
+
+haproxy_dependencies:
+  - name: haproxy
+    state: latest
+    default_release: "{{ ansible_distribution_release }}-backports"
+
+haproxy_install: []

@@ -1,0 +1,28 @@
+---
+# tasks file for setup-Debian
+
+- name: install | add proxy repository and install its signing key
+  apt_repository:
+    repo: "{{ haproxy_repo }}"
+    filename: "haproxy-{{ haproxy_version }}"
+    update_cache: true
+  tags:
+    - haproxy-install-add-repository
+
+- name: install | dependencies
+  apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    default_release: "{{ haproxy_default_release }}"
+  with_items: "{{ haproxy_dependencies }}"
+  tags:
+    - haproxy-install-dependencies
+
+- name: install | additional
+  apt:
+    name: "{{ item }}"
+    state: "{{ apt_install_state | default('latest') }}"
+    default_release: "{{ haproxy_default_release }}"
+  with_items: "{{ haproxy_install }}"
+  tags:
+    - haproxy-install-additional
