@@ -1,5 +1,25 @@
 # tasks file for haproxy
 ---
+
+- name: force gathering facts which will be needed by the role when a previous global fact gathering has not yet been done
+  setup:
+    gather_subset:
+      - 'all_ipv4_addresses'
+      - 'all_ipv6_addresses'
+      - 'distribution'
+      - 'distribution_major_version'
+      - 'distribution_release'
+      - 'distribution_version'
+      - 'dns'
+      - 'os_family'
+      - 'python'
+      - 'python_version'
+  when: ansible_os_family is not defined
+  tags:
+    - configuration
+    - haproxy
+    - haproxy-install
+
 - name: check version support
   fail:
     msg: "HAProxy version {{ haproxy_version }} is not supported"
