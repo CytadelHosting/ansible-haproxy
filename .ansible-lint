@@ -1,3 +1,5 @@
-skip_list:
-  - '204'
-  - '405'
+---
+warn_list:
+  - role-name
+  - name[play]
+  - name[casing]

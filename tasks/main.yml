@@ -21,7 +21,7 @@
     - haproxy-install
 
 - name: check version support
-  fail:
+  ansible.builtin.fail:
     msg: "HAProxy version {{ haproxy_version }} is not supported"
   when: haproxy_version | string not in haproxy_versions_supported
   tags:
@@ -43,32 +43,44 @@
     - haproxy
     - haproxy-install
 
-#- include: install.yml
+#- name: install
+#  ansible.builtin.import_tasks: install.yml
 #  tags:
 #    - configuration
 #    - haproxy
 #    - haproxy-install
 
 - include: certificates.yml
+- name: certificates
+  ansible.builtin.import_tasks: certificates.yml
   tags:
     - configuration
     - haproxy
     - haproxy-certificates
 
-- include: acl.yml
+- name: acl
+  ansible.builtin.import_tasks: acl.yml
   tags:
     - configuration
     - haproxy
     - haproxy-acl
 
-- include: configuration.yml
+- name: configuration
+  ansible.builtin.import_tasks: configuration.yml
   tags:
     - configuration
     - haproxy
     - haproxy-configuration
 
+- name: letsencrypt
+  ansible.builtin.import_tasks: letsencrypt.yml
+  tags:
+    - configuration
+    - haproxy
+    - haproxy-letsencrypt
+
 - name: start and enable service
-  service:
+  ansible.builtin.service:
     name: haproxy
     state: "{{ service_default_state | default('started') }}"
     enabled: "{{ service_default_enabled | default(true) | bool }}"
