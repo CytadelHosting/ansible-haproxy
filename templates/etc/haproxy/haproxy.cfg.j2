@@ -1,6 +1,6 @@
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
 # {{ ansible_managed }}
-# from template 'roles/niavlysAO.haproxy/templates/etc/haproxy/haproxy.cfg.j2'
+# from template 'roles/CytadelHosting.haproxy/templates/etc/haproxy/haproxy.cfg.j2'
 
 global
 {% include 'global.cfg.j2' %}
@@ -22,6 +22,8 @@ defaults
 
 {% include 'mailers.cfg.j2' %}
 
+
 {% include 'frontend.cfg.j2' %}
+
 
 {% include 'backend.cfg.j2' %}
