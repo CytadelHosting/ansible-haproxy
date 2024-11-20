@@ -50,7 +50,6 @@
 #    - haproxy
 #    - haproxy-install
 
-- include: certificates.yml
 - name: certificates
   ansible.builtin.import_tasks: certificates.yml
   tags:

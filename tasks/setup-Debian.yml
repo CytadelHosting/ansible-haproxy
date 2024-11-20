@@ -2,10 +2,31 @@
 # tasks file for setup-Debian
 
 - name: install | add proxy repository and install its signing key
-  apt_repository:
-    repo: "{{ haproxy_repo }}"
-    filename: "haproxy-{{ haproxy_version }}"
-    update_cache: true
+  block:
+
+    - name: install | add repository gpg key
+      get_url:
+        url: "{{ haproxy_repo_gpg_key }}"
+        dest: "/usr/share/keyrings/haproxy.debian.net.asc"
+        mode: 644
+      check_mode: false
+      diff: true
+      when: haproxy_repo_gpg_key is defined and haproxy_repo_gpg_key != ''
+
+    - name: install | add repository
+      apt_repository:
+        repo: "{{ item }} [signed-by=/usr/share/keyrings/haproxy.debian.net.asc] {{ haproxy_repo }}"
+        filename: "haproxy"
+        state: present
+        update_cache: true
+      loop:
+        - 'deb'
+        #- 'deb-src'
+      check_mode: false
+      diff: true
+      #when: haproxy_use_ppa | bool
+
+  when: haproxy_use_ppa | bool
   tags:
     - haproxy-install-add-repository
 
@@ -13,7 +34,7 @@
   apt:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
-    default_release: "{{ haproxy_default_release }}"
+    default_release: "{{ item.default_release }}"
   with_items: "{{ haproxy_dependencies }}"
   tags:
     - haproxy-install-dependencies
@@ -22,7 +43,7 @@
   apt:
     name: "{{ item }}"
     state: "{{ apt_install_state | default('latest') }}"
-    default_release: "{{ haproxy_default_release }}"
+    default_release: "{{ haproxy_default_release | default (omit) }}"
   with_items: "{{ haproxy_install }}"
   tags:
     - haproxy-install-additional
