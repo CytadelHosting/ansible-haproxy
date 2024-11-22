@@ -34,3 +34,14 @@
     user: root
   tags:
     - haproxy-letsencrypt-cron-ocsp-deploy
+
+
+- name: letsencrypt | combined PEM renewal hook
+  ansible.builtin.copy:
+    src: letsencrypt-combine-pem-renewal-hooks.sh
+    dest: /etc/letsencrypt/renewal-hooks/post/haproxy-certs.sh
+    owner: root
+    group: root
+    mode: '0755'
+  tags:
+    - haproxy-letsencrypt-ssl-deploy
